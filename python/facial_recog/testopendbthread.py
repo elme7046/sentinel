@@ -1,6 +1,7 @@
 import cv2
 import face_recognition as fr 
 import pickle
+import threading
 
 DBEncodings = []
 DBNames = []
@@ -17,8 +18,18 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 cam = cv2.VideoCapture(0)
 cam.set(cv2.CAP_PROP_FRAME_WIDTH,640)
 cam.set(cv2.CAP_PROP_FRAME_HEIGHT,480)
-cam.set(cv2.CAP_PROP_BUFFERSIZE,1)
 test = True
+
+def faceCheck(location,encoding):
+    for (top, right, bottom, left), faceEncod in zip(location,encoding):
+        personName = 'Unknown Person'
+        match = fr.compare_faces(DBEncodings,faceEncod)
+        if True in match:
+            match_idx = match.index(True)
+            personName = DBNames[match_idx]
+        
+    pass
+counter = 0
 while True:
     ret, unknownIm = cam.read()
     unknownIm = cv2.resize(unknownIm,(0,0),fx=0.5,fy=0.5)
@@ -27,7 +38,30 @@ while True:
     
     faceLoc = fr.face_locations(imgRGB,model='cnn')
     faceEncod = fr.face_encodings(imgRGB,faceLoc)
+    if counter % 30 == 0:
+        try:
+            threading.Thread(target=faceCheck,args=(faceLoc,faceEncod)).start()
+        except ValueError:
+            pass
+    counter += 1
+    for (top, right, bottom, left) in faceLoc:
+        
+        left = left * 4
+        top = top * 4
+        bottom = bottom * 4
+        right = right * 4
 
+        newImg = cv2. rectangle(unknownIm,(left,top),(right,bottom),(0,0,255),2)
+        unknownIm = newImg
+        #newImg = cv2.putText(unknownIm,personName,(left,top-6),font,0.7,(0,255,255),2)
+
+    unknownIm = cv2.resize(unknownIm,(0,0),fx=2,fy=2)
+    cv2.imshow('img',unknownIm)
+    cv2.moveWindow('img',0,0)
+    if cv2.waitKey(1)==ord('q'):
+        break
+
+'''
     for (top, right, bottom, left), faceEncod in zip(faceLoc,faceEncod):
         personName = 'Unknown Person'
         match = fr.compare_faces(DBEncodings,faceEncod)
@@ -42,10 +76,10 @@ while True:
 
         newImg = cv2. rectangle(unknownIm,(left,top),(right,bottom),(0,0,255),2)
         newImg = cv2.putText(unknownIm,personName,(left,top-6),font,0.7,(0,255,255),2)
-    unknownIm = cv2.resize(unknownIm,(0,0),fx=2,fy=2)
-    cv2.imshow('img',unknownIm)
-    cv2.moveWindow('img',0,0)
-    if cv2.waitKey(1)==ord('q'):
-        break
+
+
+
+
+'''
 cam.release()
 cv2.destroyAllWindows()
