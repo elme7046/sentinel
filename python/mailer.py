@@ -19,7 +19,8 @@ for i in range(1, len(sys.argv)-1):
 sender = "sentinel.homeguard@gmail.com"
 password = "wjgm admi grgi rxwr"
 
-def send_email(subject, body, sender, recipients, password):
+#def send_email(subject, body, sender, recipients, password):
+def send_email(subject, body, recipients, sender="sentinel.homeguard@gmail.com",password="wjgm admi grgi rxwr"):
 	msg = MIMEText(body)
 	msg["Subject"] = subject
 	msg["From"] = sender
@@ -29,4 +30,4 @@ def send_email(subject, body, sender, recipients, password):
 		smtp_server.sendmail(sender, recipients, msg.as_string())
 	print("Message sent!")
 	
-send_email(subject, body, sender, recipients, password)
+#send_email(subject, body, sender, recipients, password)

@@ -19,6 +19,8 @@ cam.set(cv2.CAP_PROP_FRAME_WIDTH,640)
 cam.set(cv2.CAP_PROP_FRAME_HEIGHT,480)
 cam.set(cv2.CAP_PROP_BUFFERSIZE,1)
 test = True
+
+
 while True:
     ret, unknownIm = cam.read()
     unknownIm = cv2.resize(unknownIm,(0,0),fx=0.5,fy=0.5)
@@ -40,8 +42,8 @@ while True:
         bottom = bottom * 4
         right = right * 4
 
-        newImg = cv2. rectangle(unknownIm,(left,top),(right,bottom),(0,0,255),2)
-        newImg = cv2.putText(unknownIm,personName,(left,top-6),font,0.7,(0,255,255),2)
+        cv2.rectangle(unknownIm,(left,top),(right,bottom),(0,0,255),2)
+        cv2.putText(unknownIm,personName,(left,top-6),font,0.7,(0,255,255),2)
     unknownIm = cv2.resize(unknownIm,(0,0),fx=2,fy=2)
     cv2.imshow('img',unknownIm)
     cv2.moveWindow('img',0,0)
