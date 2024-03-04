@@ -5,7 +5,8 @@ import face_recognition as fr
 import pickle
 
 #cam = cv2.VideoCapture('rtsp://192.168.1.3:554')
-cam = cv2.VideoCapture("rtsp://10.0.0.58:554")
+#cam = cv2.VideoCapture("rtsp://10.0.0.58:554")
+cam = cv2.VideoCapture("rtsp://172.20.10.5:554")
 #cam = cv2.VideoCapture(0)
 cam.set(cv2.CAP_PROP_FRAME_WIDTH,640)
 cam.set(cv2.CAP_PROP_FRAME_HEIGHT,480)
