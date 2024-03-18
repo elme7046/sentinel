@@ -39,3 +39,4 @@ def sendUDP(MESSAGE, UDP_IP, UDP_PORT):
                       socket.SOCK_DGRAM) # UDP
     sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
 
+#sendUDP(MESSAGE,UDP_IP,UDP_PORT)

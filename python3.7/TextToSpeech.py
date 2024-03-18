@@ -1,6 +1,8 @@
 import sys
 import os
 
+
+
 if(sys.version[:5] != "3.7.5"):
     print("Using wrong python version!")
     exit()
@@ -21,8 +23,9 @@ if(type(script) != str):
 client = OpenAI()
 
 speech_file_path = Path("/home/senor/Documents/Sentinel1.0/sentinel/python/speaker/goodput.mp3").parent
-response = client.audio.speech.create(model="tts-1", voice="alloy", input=script)
+with client.audio.speech.with_streaming_response.create(model="tts-1", voice="alloy", input=script) as response:
+#/home/senorita/sentinel/python/goodput.mp3
+	response.stream_to_file("/home/senorita/sentinel/python/goodput.mp3")
+#os.system("mpg123 /home/senorita/sentinel/python/goodput.mp3")
 
-response.stream_to_file("./goodput.mp3")
-os.system("mpg123 ./goodput.mp3")
 

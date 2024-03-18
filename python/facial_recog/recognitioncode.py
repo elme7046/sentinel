@@ -66,6 +66,9 @@ def recognition():
         with open('DBTrain.pkl','rb') as f:
             DBNames = pickle.load(f)
             DBEncodings = pickle.load(f)
+        with open('DBTrain.pkl', 'wb') as f:
+            pickle.dump(DBNames,f)
+            pickle.dump(DBEncodings,f)
     #cam = cv2.VideoCapture('rtsp://192.168.1.3:554') #School router
     #cam = cv2.VideoCapture("rtsp://10.0.0.58:554") #Home router
     cam = cv2.VideoCapture("rtsp://172.20.10.5:554") #Stephen's hotspot
@@ -97,10 +100,13 @@ def recognition():
                 if personInfo == 'w':
                     #cv2.rectangle(unknownIm,(left,top),(right,bottom),(0,255,0),2)
                     #cv2.putText(unknownIm,personName,(left,top-6),font,0.7,(0,255,255),2) 
-                    
-                    cam.release()
-                    cv2.destroyAllWindows()      
-                    return personInfo, personName  
+                    buffer.pop(0)
+                    buffer.append("w")
+                    #print(buffer)
+                    if(len(set(buffer)) == 1 and buffer[0] == "w"):
+                        cam.release()
+                        cv2.destroyAllWindows()      
+                        return personInfo, personName 
                         
                 elif personInfo == 'k':
                     cv2.rectangle(unknownIm,(left,top),(right,bottom),(0,255,0),2)
@@ -126,12 +132,13 @@ def recognition():
             if(len(known_persons) > 0):
                 if(len(set(buffer)) == 1 and buffer[0] == "k"):
                     temp, betterimg = cam.read()
-                    imName = "temp" + ".k.png"
-                    path = '/home/senorita/Documents/sentinel/sentinel/python/sentinel_database'
+                    imName = "temp" + ".png"
+                    #path = '/home/senorita/Documents/sentinel/sentinel/python/sentinel_database'
+                    path = '/home/senorita/sentinel/python/sentinel_database'
                     cv2.imwrite(os.path.join(path,imName),betterimg)
                     subject = "Someone is at your door"
                     body = personName + " is at your front door"
-                    recipients = ["mitc1520@kettering.edu"]
+                    recipients = ["sentinel.homeguard@gmail.com"]
                     fileName = os.path.join(path,imName)
                     #mailer.send_email(subject,body,recipients,file = fileName)
                     threading.Thread(target=mailer.send_email,args=(subject,body,recipients,fileName)).start()
@@ -165,13 +172,14 @@ def recognition():
                         temp, betterimg = cam.read()
                         cT = datetime.datetime.now()
                         imName = "Unknown_Person_" + cT.strftime("%Y_%m_%d_%H_%M.") + "u.png"
-                        path = '/home/senorita/Documents/sentinel/sentinel/python/sentinel_database'
+                        #path = '/home/senorita/Documents/sentinel/sentinel/python/sentinel_database'
+                        path = '/home/senorita/sentinel/python/sentinel_database'
                         cv2.imwrite(os.path.join(path,imName),betterimg)
                         if os.path.isfile('DBTrain.pkl'):
                             database.appendDatabase(os.path.join(path,imName),imName)
                         subject = "Someone is at your door"
                         body = "Unknown person at your front door" #personName + " is at your front door"
-                        recipients = ["mitc1520@kettering.edu"]
+                        recipients = ["sentinel.homeguard@gmail.com"]
                         fileName = os.path.join(path,imName)
                         #mailer.send_email(subject,body,recipients,file = fileName)
                         threading.Thread(target=mailer.send_email,args=(subject,body,recipients,fileName)).start()

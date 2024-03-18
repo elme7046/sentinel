@@ -7,10 +7,11 @@ import pickle
 def buildDatabase():
     DBEncodings = []
     DBNames = []
-    DBdir = '/home/senorita/Documents/sentinel/sentinel/python/sentinel_database'
+    #DBdir = '/home/senorita/Documents/sentinel/sentinel/python/sentinel_database'
+    DBdir = '/home/senorita/sentinel/python/sentinel_database'
     for root, dirs, files, in os.walk(DBdir):
         for name in files:
-            if '.png' in name and name != 'default.png' and '.u' not in name:
+            if '.png' in name and name != 'default.png' and '.u' not in name and ('.k' in name or '.w' in name):
                 print(name)
                 fullfileName = os.path.join(root,name)
                 personImg = fr.load_image_file(fullfileName)
